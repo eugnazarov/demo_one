@@ -1,32 +1,45 @@
-import {makeAutoObservable} from 'mobx';
+import {action, makeAutoObservable} from 'mobx';
 import axios from 'axios';
 import {Actions} from 'react-native-router-flux';
-import {Linking} from 'react-native';
+import {makePersistable} from 'mobx-persist-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class Profile {
-  user = null;
   token = null;
   id = null;
   data = null;
-  loading: false;
+  loading = false;
 
   constructor() {
     makeAutoObservable(this);
+    makePersistable(this, {
+      name: 'Profile',
+      properties: ['token', 'data', 'id'],
+      storage: AsyncStorage,
+    }).then(() => {
+      console.log('persisted');
+    });
   }
 
   getUser = () => {
     this.loading = true;
     axios
-      .get(`http://localhost:8080/users/?id=${this.id}`, {
+      .get(`http://localhost:8080/api/users/?id=${this.id}`, {
         headers: {authorization: `Bearer ${this.token}`},
       })
-      .then(r => {
-        this.data = r.data.userProfile;
-        this.loading = false;
+      .then(
+        action(r => {
+          this.data = r.data.userProfile;
+          this.loading = false;
+        }),
+      )
+      .catch(e => {
+        console.log(e);
       });
   };
-  logOut = () => {
+  logOut = async () => {
     this.token = null;
+    this.id = null;
   };
   setToken = token => {
     console.log(token);

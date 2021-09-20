@@ -4,4 +4,7 @@ export const theme = {
     secondary: '#1C1E33',
     textColor: '#fff',
   },
+  fonts: {
+    regular: 'ProximaNova-Regular',
+  },
 };

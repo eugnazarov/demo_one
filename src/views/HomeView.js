@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Text, View, StyleSheet, ActivityIndicator} from 'react-native';
+import {Text, View, ActivityIndicator} from 'react-native';
 import {observer} from 'mobx-react-lite';
 import Profile from '../store/Profile';
 import {Button, withTheme} from 'react-native-elements';
@@ -22,9 +22,15 @@ const HomeView = observer(({theme}) => {
         <Text style={tw`text-white uppercase text-xl text-left`}>
           Привет, {Profile.data.firstName} {Profile.data.lastName}!
         </Text>
-        <Text style={tw`text-white text-l`}>
-          У тебя есть {Profile.data.vacationDay} неиспользованных дней отпуска
-        </Text>
+        {Profile.data.vacationDay === 0 ? (
+          <Text style={tw`text-white text-left`}>
+            У тебя нет доступных дней отпуска
+          </Text>
+        ) : (
+          <Text style={tw`text-white text-left`}>
+            У тебя есть {Profile.data.vacationDay} неиспользованных дней отпуска
+          </Text>
+        )}
       </View>
       <Button title="Выход" onPress={Profile.logOut} />
     </View>
@@ -32,7 +38,3 @@ const HomeView = observer(({theme}) => {
 });
 
 export default withTheme(HomeView);
-
-const styles = StyleSheet.create({
-  container: {},
-});

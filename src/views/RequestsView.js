@@ -1,9 +1,19 @@
 import React, {useState} from 'react';
-import {View} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {observer} from 'mobx-react-lite';
-import {FAB, Icon, SpeedDial, Text, withTheme} from 'react-native-elements';
+import {
+  Badge,
+  FAB,
+  Icon,
+  ListItem,
+  SpeedDial,
+  Text,
+  withTheme,
+} from 'react-native-elements';
 import tw from 'tailwind-react-native-classnames';
 import {Actions} from 'react-native-router-flux';
+import Collapsible from 'react-native-collapsible';
+import RequestItem from '../components/requestItem';
 
 const RequestsView = observer(({theme}) => {
   const [isDialOpen, setIsDialOpen] = useState(false);
@@ -12,16 +22,36 @@ const RequestsView = observer(({theme}) => {
     action();
     setIsDialOpen(false);
   };
+  const mockData = [
+    {type: 'БС', date: '2021-21-09', status: 'pending'},
+    {type: 'БС', date: '2021-22-09', status: 'rejected'},
+    {
+      type: 'Удаленка',
+      date: '2021-22-09',
+      status: 'rejected',
+      reason: 'Недостаток сотрудников на проекте',
+    },
+    {type: 'БС', date: '2021-22-09', status: 'rejected'},
+    {type: 'БС', date: '2021-22-09', status: 'rejected'},
+    {type: 'БС', date: '2021-23-09', status: 'approved'},
+  ];
+
   return (
     <View
       style={{
         padding: 15,
         height: '100%',
-        backgroundColor: theme.colors.secondary,
+        backgroundColor: '#fff',
       }}>
-      <Text h1 style={tw`text-white text-center`}>
-        Список запросов пуст
-      </Text>
+      <View style={tw`mb-10`}>
+        <Text style={tw`text-center text-black uppercase text-lg`}>
+          Мои запросы
+        </Text>
+      </View>
+      <FlatList
+        data={mockData}
+        renderItem={({item}) => <RequestItem item={item} />}
+      />
       <SpeedDial
         color={theme.colors.primary}
         isOpen={isDialOpen}
@@ -39,7 +69,7 @@ const RequestsView = observer(({theme}) => {
           icon={() => (
             <Icon name="airplane-outline" type="ionicon" color="#fff" />
           )}
-          onPress={() => console.log('Add Something')}
+          onPress={() => onDialClose(Actions.vacation)}
         />
         <SpeedDial.Action
           title="БС"
