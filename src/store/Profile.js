@@ -54,10 +54,10 @@ class Profile {
     Actions.slack({
       uri: linkOAuth,
       redirectUrl: 'http://localhost:8080/auth/slack/callback',
-      clientId: '33906029636.2428260384196',
+      clientId: process.env.clientId,
     });
   };
 }
 export default new Profile();
 
-export const linkOAuth = `https://slack.com/oauth/authorize?client_id=33906029636.2428260384196&scope=identity.basic,identity.email,identity.avatar&redirect_uri=http://localhost:8080/auth/slack/callback`;
+export const linkOAuth = process.env.linkOAuth;
